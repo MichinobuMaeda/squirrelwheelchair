@@ -29,9 +29,16 @@ exports.onDeletedVersion = onDocumentDeleted(
         await verRef.set({version});
         logger.info(`created doc ${verRef.path}: ${version}`);
       } catch (e) {
-        await verRef.ref.set({version: oldVersion});
-        logger.info(`restored doc ${verRef.path}: ${oldVersion}`);
-        throw e;
+        try {
+          logger.error(e.toString());
+          logger.error(e.stack);
+          await verRef.ref.set({version: oldVersion});
+          logger.error(`restored doc ${verRef.path}: ${oldVersion}`);
+        } catch (e) {
+          logger.error(`failed to restore doc ${verRef.path}: ${oldVersion}`);
+          logger.error(e.toString());
+          logger.error(e.stack);
+        }
       }
     },
 );

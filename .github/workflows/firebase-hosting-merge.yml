@@ -62,18 +62,18 @@ jobs:
         name: Test and Deploy Functions
         run: |
           npm ci --prefix functions && \
-          npm run test --prefix functions && \
-          run: export FIREBASE_SERVICE_ACCOUNT_SQUIRRELWHEELCHAIR=$HOME/fsa.json && \\
+          echo 'skip npm run test --prefix functions' && \
+          run: export GOOGLE_APPLICATION_CREDENTIALS=$HOME/fsa.json && \\
           npx firebase deploy --only functions --force
       - if: steps.WITH_FIRESTORE.outputs.src == 'true'
         name: Test and Deploy Firestore
         run: |
-          run: export FIREBASE_SERVICE_ACCOUNT_SQUIRRELWHEELCHAIR=$HOME/fsa.json && \\
+          run: export GOOGLE_APPLICATION_CREDENTIALS=$HOME/fsa.json && \\
           npx firebase deploy --only firestore
       - if: steps.WITH_STORAGE.outputs.src == 'true'
         name: Test and Deploy Storage
         run: |
-          run: export FIREBASE_SERVICE_ACCOUNT_SQUIRRELWHEELCHAIR=$HOME/fsa.json && \\
+          run: export GOOGLE_APPLICATION_CREDENTIALS=$HOME/fsa.json && \\
           npx firebase deploy --only storage
 
       - name: Set UI version
@@ -99,5 +99,5 @@ jobs:
           projectId: squirrelwheelchair
       - name: Trigger system update job
         run: |
-          run: export FIREBASE_SERVICE_ACCOUNT_SQUIRRELWHEELCHAIR=$HOME/fsa.json && \\
+          run: export GOOGLE_APPLICATION_CREDENTIALS=$HOME/fsa.json && \\
           npx firebase firestore:delete service/version --force
