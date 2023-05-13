@@ -51,6 +51,8 @@ fvm flutter run
             - Your apps: </> (Web)
                 - App nickname:  Squirrel Wheelchair
                 - [v] Also set up Firebase Hosting for this app.
+            - Service accounts
+                - Generate new private key
         - Usage and billing
             - Details & settings
                 - Modify plan: Blaze (Pay as you go)
