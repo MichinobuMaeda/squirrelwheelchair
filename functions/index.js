@@ -20,7 +20,7 @@ exports.onDeletedVersion = onDocumentDeleted(
       try {
         // TODO: upgrade()
 
-        const url = `https://${event.project}.web.app/version.jsonx`;
+        const url = `https://${event.project}.web.app/version.json`;
         const params = `check=${new Date().getTime()}`;
         const res = await axios.get(`${url}?${params}`);
         const {version} = res.data;
