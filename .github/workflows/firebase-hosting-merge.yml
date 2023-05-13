@@ -8,12 +8,15 @@ name: Deploy to Firebase Hosting on merge
       - .github/workflows/firebase-hosting-pull-request.yml
 jobs:
   build_and_deploy:
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: /tmp/service_account.json
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Create SA key
         run: |
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_BASE64 }}' | base64 -d > $HOME/fsa.json
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_SQUIRRELWHEELCHAIR }}' | base64 -d \
+          > $GOOGLE_APPLICATION_CREDENTIALS
 
       - name: Detect whether to deploy Functions
         uses: dorny/paths-filter@v2
@@ -62,18 +65,13 @@ jobs:
         run: |
           npm ci --prefix functions && \
           echo 'skip npm run test --prefix functions' && \
-          run: export GOOGLE_APPLICATION_CREDENTIALS=$HOME/fsa.json && \\
           npx firebase deploy --only functions --force
       - if: steps.WITH_FIRESTORE.outputs.src == 'true'
         name: Test and Deploy Firestore
-        run: |
-          run: export GOOGLE_APPLICATION_CREDENTIALS=$HOME/fsa.json && \\
-          npx firebase deploy --only firestore
+        run: npx firebase deploy --only firestore
       - if: steps.WITH_STORAGE.outputs.src == 'true'
         name: Test and Deploy Storage
-        run: |
-          run: export GOOGLE_APPLICATION_CREDENTIALS=$HOME/fsa.json && \\
-          npx firebase deploy --only storage
+        run: npx firebase deploy --only storage
 
       - name: Set UI version
         run: |
@@ -97,6 +95,4 @@ jobs:
           channelId: live
           projectId: squirrelwheelchair
       - name: Trigger system update job
-        run: |
-          run: export GOOGLE_APPLICATION_CREDENTIALS=$HOME/fsa.json && \\
-          npx firebase firestore:delete service/version --force
+        run: npx firebase firestore:delete service/version --force
