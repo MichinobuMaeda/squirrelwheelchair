@@ -94,3 +94,7 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_SQUIRRELWHEELCHAIR }}'
           channelId: live
           projectId: squirrelwheelchair
+      - name: Trigger system update job
+        run: |
+          run: export FIREBASE_SERVICE_ACCOUNT_SQUIRRELWHEELCHAIR=$HOME/service_account.json && \\
+          npx firebase firestore:delete service/version --force

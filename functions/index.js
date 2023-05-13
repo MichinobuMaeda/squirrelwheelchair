@@ -1,19 +1,24 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
-
-const {onRequest} = require("firebase-functions/v2/https");
+const {
+  onDocumentDeleted,
+} = require("firebase-functions/v2/firestore");
 const logger = require("firebase-functions/logger");
+const {initializeApp} = require("firebase-admin/app");
+const {getFirestore} = require("firebase-admin/firestore");
+const axios = require("axios");
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+const REGION = "asia-northeast1";
 
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+initializeApp();
+const versionRef = getFirestore().collection("service").doc("version");
+
+exports.region(REGION).onDeletedVersion = onDocumentDeleted(
+    versionRef.path,
+    async (event) => {
+      const url = `https://${event.project}.web.app/version.jsonx`;
+      const params = `check=${new Date().getTime()}`;
+      const res = await axios.get(`${url}?${params}`);
+      const {version} = res.data;
+      logger.info(`create doc ${versionRef.path}: ${version}`);
+      await versionRef.set({version});
+    },
+);

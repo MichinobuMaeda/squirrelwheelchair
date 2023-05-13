@@ -68,6 +68,12 @@ fvm flutter run
             - SWITCH TO NATIVE MODE
             - Create Database
                 - [v] Start in production mode
+            - Data
+                - Start collection: service
+                    - Add document: version
+                        - Field: version
+                        - Type: String
+                        - Value: 0.9.9
         - Storage: Get started
             - [v] Start in production mode
 
