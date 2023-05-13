@@ -63,7 +63,8 @@ fvm flutter run
                 - Template language: Japanese
             - Settings
                 - User account linking: Link accounts that use the same email
-        - App Check: Later
+        - App Check: Get started
+            - Squirrel Wheelchair: Register
         - Firestore: Go to Google Cloud Console
             - SWITCH TO NATIVE MODE
             - Create Database
@@ -73,7 +74,7 @@ fvm flutter run
                     - Add document: version
                         - Field: version
                         - Type: String
-                        - Value: 0.9.9
+                        - Value: 0.0.1+1
         - Storage: Get started
             - [v] Start in production mode
 

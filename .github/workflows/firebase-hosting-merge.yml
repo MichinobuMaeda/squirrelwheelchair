@@ -40,25 +40,24 @@ jobs:
       - name: Read .nvmrc
         run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
         id: nvm
-      - if: |
-          steps.WITH_FUNCTIONS.outputs.src == 'true' ||
-          steps.WITH_FIRESTORE.outputs.src == 'true' ||
-          steps.WITH_STORAGE.outputs.src == 'true'
-        uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2
         with:
           node-version: ${{ steps.nvm.outputs.NODE_VERSION }}
-      - if: |
-          steps.WITH_FUNCTIONS.outputs.src == 'true' ||
-          steps.WITH_FIRESTORE.outputs.src == 'true' ||
-          steps.WITH_STORAGE.outputs.src == 'true'
-        run: npm ci
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        id: cache-node_modules
+        with:
+          path: functions/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package-lock.json ') }}
+      - run: npm ci
+
       - if: steps.WITH_FUNCTIONS.outputs.src == 'true'
         name: Cache functions/node_modules
         uses: actions/cache@v2
         id: cache-functions-node_modules
         with:
           path: functions/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('functions/yarn.lock') }}
+          key: ${{ runner.os }}-${{ hashFiles('functions/package-lock.json ') }}
       - if: steps.WITH_FUNCTIONS.outputs.src == 'true'
         name: Test and Deploy Functions
         run: |
@@ -100,5 +99,5 @@ jobs:
           projectId: squirrelwheelchair
       - name: Trigger system update job
         run: |
-          run: export FIREBASE_SERVICE_ACCOUNT_SQUIRRELWHEELCHAIR=$HOME/service_account.json && \\
+          run: export FIREBASE_SERVICE_ACCOUNT_SQUIRRELWHEELCHAIR=$HOME/fsa.json && \\
           npx firebase firestore:delete service/version --force
