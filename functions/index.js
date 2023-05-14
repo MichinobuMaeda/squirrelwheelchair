@@ -4,6 +4,9 @@ const {
   onDocumentUpdated,
   onDocumentDeleted,
 } = require("firebase-functions/v2/firestore");
+const {
+  beforeUserCreated,
+} = require("firebase-functions/v2/identity");
 const logger = require("firebase-functions/logger");
 const {initializeApp} = require("firebase-admin/app");
 const {getFirestore} = require("firebase-admin/firestore");
@@ -22,6 +25,12 @@ const {setTestData} = require("./testUtils");
 setGlobalOptions({region: "asia-northeast1"});
 
 initializeApp();
+
+exports.beforeUserCreated = beforeUserCreated(
+    (event) => {
+      logger.info(JSON.stringify(event.additionalUserInfo));
+    },
+);
 
 exports.onCreateAccount = onDocumentCreated(
     "accounts/{account}",
