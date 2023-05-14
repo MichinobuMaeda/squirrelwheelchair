@@ -8,7 +8,7 @@ const logger = require("firebase-functions/logger");
 async function restoreTriggerDoc(event) {
   const verRef = event.data.ref;
   await verRef.set({createdAt: new Date()});
-  logger.error(`restored doc ${verRef.path}`);
+  logger.info(`restored doc ${verRef.path}`);
 }
 
 /**

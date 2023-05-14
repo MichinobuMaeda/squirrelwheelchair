@@ -32,7 +32,7 @@ describe("restoreTriggerDoc()", () => {
     expect(mockDocUpgrade.ref.set.mock.calls).toEqual([
       [{createdAt: expect.any(Date)}],
     ]);
-    expect(logger.error.mock.calls).toEqual([
+    expect(logger.info.mock.calls).toEqual([
       [`restored doc ${mockDocUpgrade.ref.path}`],
     ]);
   });
