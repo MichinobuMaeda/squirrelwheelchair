@@ -19,59 +19,42 @@ jobs:
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_BASE64 }}' | base64 -d \
           > $GOOGLE_APPLICATION_CREDENTIALS
 
-      - name: Detect whether to deploy Functions
+      - name: Detect modified source
         uses: dorny/paths-filter@v2
-        id: WITH_FUNCTIONS
+        id: filter
         with:
           filters: |
-            src:
+            functions:
               - 'functions/**'
-      - name: Detect whether to deploy Firestore
-        uses: dorny/paths-filter@v2
-        id: WITH_FIRESTORE
-        with:
-          filters: |
-            src:
+            firestore:
               - 'firestore.*'
-      - name: Detect whether to deploy Storage
-        uses: dorny/paths-filter@v2
-        id: WITH_STORAGE
-        with:
-          filters: |
-            src:
+            storage:
               - 'storage.*'
-      - name: Read .nvmrc
-        run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
-        id: nvm
-      - uses: actions/setup-node@v2
+
+      - uses: actions/setup-node@v3
         with:
-          node-version: ${{ steps.nvm.outputs.NODE_VERSION }}
-      - name: Cache node_modules
-        uses: actions/cache@v2
-        id: cache-node_modules
-        with:
-          path: functions/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('package-lock.json ') }}
+          node-version-file: '.nvmrc'
+          ache-dependency-path: 'package-lock.json'
       - run: npm ci
 
-      - if: steps.WITH_FUNCTIONS.outputs.src == 'true'
+      - if: steps.filter.outputs.functions == 'true'
         name: Cache functions/node_modules
         uses: actions/cache@v2
         id: cache-functions-node_modules
         with:
           path: functions/node_modules
           key: ${{ runner.os }}-${{ hashFiles('functions/package-lock.json ') }}
-      - if: steps.WITH_FUNCTIONS.outputs.src == 'true'
+      - if: steps.filter.outputs.functions == 'true'
         name: Test and Deploy Functions
         run: |
           npm ci --prefix functions && \
           npm test --prefix functions && \
           npx firebase deploy --only functions --force
-      - if: steps.WITH_FIRESTORE.outputs.src == 'true'
-        name: Test and Deploy Firestore
+      - if: steps.filter.outputs.firestore == 'true'
+        name: Deploy Firestore
         run: npx firebase deploy --only firestore
-      - if: steps.WITH_STORAGE.outputs.src == 'true'
-        name: Test and Deploy Storage
+      - if: steps.filter.outputs.storage == 'true'
+        name: Deploy Storage
         run: npx firebase deploy --only storage
 
       - name: Set firebase api key
