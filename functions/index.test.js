@@ -5,10 +5,12 @@ const firestore = require("firebase-admin/firestore");
 const accounts = require("./accounts");
 const upgrade = require("./upgrade");
 const index = require("./index");
+const testUtils = require("./testUtils");
 
 jest.mock("firebase-functions/logger");
 jest.mock("./accounts");
 jest.mock("./upgrade");
+jest.mock("./testUtils");
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -108,6 +110,11 @@ describe("onDeletedTest", () => {
         expect.any(firestore.Firestore),
       ],
     ]);
+    expect(testUtils.setTestData.mock.calls).toEqual([
+      [
+        expect.any(firestore.Firestore),
+      ],
+    ]);
   });
 
   it("don't calls upgradeData() if NODE_ENV == 'production'", () => {
@@ -125,7 +132,10 @@ describe("onDeletedTest", () => {
     expect(logger.info.mock.calls).toEqual([
       ["production"],
     ]);
-    expect(upgrade.upgradeData.mock.calls).toEqual([]);
+    expect(upgrade.upgradeData.mock.calls).toEqual([
+    ]);
+    expect(testUtils.setTestData.mock.calls).toEqual([
+    ]);
     process.env.NODE_ENV = orgNodeEnv;
   });
 });
