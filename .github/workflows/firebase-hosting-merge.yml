@@ -83,4 +83,4 @@ jobs:
           channelId: live
           projectId: squirrelwheelchair
       - name: Trigger system update job
-        run: npx firebase firestore:delete service/version --force
+        run: npx firebase firestore:delete service/upgrade --force
