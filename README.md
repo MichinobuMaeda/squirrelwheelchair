@@ -14,6 +14,7 @@ fvm flutter pub get
 nvm use
 npm install
 npm install --prefix functions
+npm test
 npm start
 ```
 
