@@ -16,7 +16,7 @@ service cloud.firestore {
       allow read: if request.auth.uid in request.resource.data.accounts;
       allow read, write: if isAdmin();
     }
-    match /providers/{provider} {
+    match /media/{medium} {
       allow read, write: if isAdmin();
     }
     match /{document=**} {
