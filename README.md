@@ -4,32 +4,20 @@
 
 - fvm
 - nvm
+- Java JDK >= 11 for Firebase Local Emulator Suite
 
 ## Getting Started
 
 ```bash
 git clone git@github.com:MichinobuMaeda/squirrelwheelchair.git
-fvm flutter run
+fvm flutter pub get
+nvm use
+npm install
+npm install --prefix functions
+npm start
 ```
 
-<https://fvm.app/docs/getting_started/configuration/>
-
-`.vscode/settings.json`
-
-```json
-{
-    "dart.flutterSdkPath": ".fvm/flutter_sdk",
-    "search.exclude": {
-      "**/.fvm": true
-    },
-    "files.watcherExclude": {
-      "**/.fvm": true
-    },
-    "cSpell.words": [
-        "squirrelwheelchair"
-    ]
-}
-```
+Firebase Emulators UI: <http://localhost:4040/>
 
 ## Create this project
 
@@ -59,10 +47,15 @@ fvm flutter run
                 - Budgets & alerts: ...
     - Build
         - Authentication: Get started
+            - Sign-in method
+                - Google: Enable
             - Templates
                 - Template language: Japanese
             - Settings
                 - User account linking: Link accounts that use the same email
+                - Blocking functions
+                    - Upgrade to Firebase Auth with Identity Platform to access this feature
+                        - Upgrade
         - App Check: Get started
             - Squirrel Wheelchair: Register
         - Firestore: Go to Google Cloud Console
@@ -71,10 +64,7 @@ fvm flutter run
                 - [v] Start in production mode
             - Data
                 - Start collection: service
-                    - Add document: version
-                        - Field: version
-                        - Type: String
-                        - Value: 0.0.1+1
+                    - Add document: upgrade
         - Storage: Get started
             - [v] Start in production mode
 
@@ -125,12 +115,88 @@ i  Action required: Visit this URL to revoke authorization for the Firebase CLI 
 https://github.com/settings/connections/applications/..........
 
 $ rm build/web/404.html
+$ cat squirrelwheelchair-firebase-adminsdk-zyq30-aaaaaaaaaaaaa.json | base64
 ```
 
-<https://fvm.app/docs/getting_started/configuration/>
+Set BASE64 encoded service account key to GitHub Actions Secret `FIREBASE_SERVICE_ACCOUNT_BASE64`.
 
 `.gitignore`
 
 ```gitignore
 .fvm/flutter_sdk
 ```
+
+`.vscode/settings.json`
+
+```json
+{
+    "dart.flutterSdkPath": ".fvm/flutter_sdk",
+    "search.exclude": {
+      "**/.fvm": true
+    },
+    "files.watcherExclude": {
+      "**/.fvm": true
+    ]
+}
+```
+
+Install flutter and firebase-tools globally.
+
+```bash
+$ fvm dart pub global activate flutterfire_cli
+$ flutterfire configure
+✔ Which platforms should your configuration support (use arrow keys & space to select)? · web  
+
+$ mv lib/firebase_options.dart lib/config/
+```
+
+Uninstall globally installed flutter and/or firebase-tools if you need.
+
+Set value of `apiKey` in `lib/config/firebase_options.dart` to GitHub Actions Secret `FIREBASE_API_KEY`.
+
+Replace the value of `apiKey` in `lib/config/firebase_options.dart` to `for test`.
+
+Set reCAPTCHA Site Key to value of `webRecaptchaSiteKey` in `lib/config/app_info.dart`.
+
+```bash
+$ npx firebase init emulators
+? Which Firebase emulators do you want to set up? Press Space to select emulators, 
+then Enter to confirm your choices. Authentication Emulator, Functions Emulator, 
+Firestore Emulator, Storage Emulator
+? Which port do you want to use for the auth emulator? 9099
+? Which port do you want to use for the functions emulator? 5001
+? Which port do you want to use for the firestore emulator? 8080
+? Which port do you want to use for the hosting emulator? 5000
+? Which port do you want to use for the storage emulator? 9199
+? Would you like to enable the Emulator UI? Yes
+? Which port do you want to use for the Emulator UI (leave empty to use any available 
+port)? 4040
+
+$ npx firebase emulators:start  --only auth,firestore,storage,functions
+```
+
+Add some data.
+
+```bash
+npx firebase emulators:export test/firebase-emulators
+```
+
+After deployment of Functions
+
+<https://console.firebase.google.com/u/0/>
+
+- squirrelwheelchair
+    - Build
+        - Firestore: Go to Google Cloud Console
+            - Data
+                - Start collection: accounts
+                    - Add document: AUTO-ID
+                        - Field: admin
+                            - Type: boolean
+                            - Value: true
+                        - Field: email
+                            - Type: string
+                            - Value: admin's e-mail address
+                        - Field: displayName
+                            - Type: string
+                            - Value: admin's display name

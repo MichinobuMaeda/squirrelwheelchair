@@ -1,44 +1,54 @@
+const {setGlobalOptions} = require("firebase-functions/v2");
 const {
+  onDocumentCreated,
+  onDocumentUpdated,
   onDocumentDeleted,
 } = require("firebase-functions/v2/firestore");
-const {setGlobalOptions} = require("firebase-functions/v2");
 const logger = require("firebase-functions/logger");
 const {initializeApp} = require("firebase-admin/app");
-const axios = require("axios");
+const {getFirestore} = require("firebase-admin/firestore");
+const {getAuth} = require("firebase-admin/auth");
+const {
+  restoreTriggerDoc,
+  upgradeData,
+  setUiVersion,
+} = require("./upgrade");
+const {
+  createUser,
+  updateUser,
+} = require("./accounts");
+const {setTestData} = require("./testUtils");
 
 setGlobalOptions({region: "asia-northeast1"});
 
 initializeApp();
 
-exports.onDeletedVersion = onDocumentDeleted(
-    "service/version",
+exports.onCreateAccount = onDocumentCreated(
+    "accounts/{account}",
+    (event) => createUser(getAuth(), event.data),
+);
+
+exports.onUpdateAccount = onDocumentUpdated(
+    "accounts/{account}",
+    (event) => updateUser(getAuth(), event.data),
+);
+
+exports.onDeletedUpgrade = onDocumentDeleted(
+    "service/upgrade",
     async (event) => {
-      const oldVersion = event.data.before.data().version;
-      const verRef = event.data.before.ref;
-      logger.info(`deleted doc ${event.data.before.ref.path}: ${oldVersion}`);
+      const db = getFirestore();
+      await restoreTriggerDoc(event);
+      await upgradeData(db);
+      await setUiVersion(event, db);
+    },
+);
 
-      try {
-        // TODO: upgrade()
-
-        const url = `https://${event.project}.web.app/version.json`;
-        const params = `check=${new Date().getTime()}`;
-        const res = await axios.get(`${url}?${params}`);
-        const {version} = res.data;
-        logger.info(`get new version: ${version}`);
-
-        await verRef.set({version});
-        logger.info(`created doc ${verRef.path}: ${version}`);
-      } catch (e) {
-        try {
-          logger.error(e.toString());
-          logger.error(e.stack);
-          await verRef.ref.set({version: oldVersion});
-          logger.error(`restored doc ${verRef.path}: ${oldVersion}`);
-        } catch (e) {
-          logger.error(`failed to restore doc ${verRef.path}: ${oldVersion}`);
-          logger.error(e.toString());
-          logger.error(e.stack);
-        }
-      }
+exports.onDeletedTest = onDocumentDeleted(
+    "service/test",
+    async (_) => {
+      logger.info(process.env.NODE_ENV);
+      if (process.env.NODE_ENV !== "test") return;
+      await upgradeData(getFirestore());
+      await setTestData(getFirestore());
     },
 );

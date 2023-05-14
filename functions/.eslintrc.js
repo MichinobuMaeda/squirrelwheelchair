@@ -1,7 +1,8 @@
 module.exports = {
   env: {
-    es6: true,
-    node: true,
+    "es6": true,
+    "node": true,
+    "jest/globals": true,
   },
   parserOptions: {
     "ecmaVersion": 2018,
@@ -10,6 +11,7 @@ module.exports = {
     "eslint:recommended",
     "google",
   ],
+  plugins: ["jest"],
   rules: {
     "no-restricted-globals": ["error", "name", "length"],
     "prefer-arrow-callback": "error",

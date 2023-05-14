@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - run: echo NODE_ENV=production > functions/.env
       - name: Create SA key
         run: |
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_BASE64 }}' | base64 -d \
@@ -64,7 +65,7 @@ jobs:
         name: Test and Deploy Functions
         run: |
           npm ci --prefix functions && \
-          echo 'skip npm run test --prefix functions' && \
+          npm test --prefix functions && \
           npx firebase deploy --only functions --force
       - if: steps.WITH_FIRESTORE.outputs.src == 'true'
         name: Test and Deploy Firestore
@@ -73,6 +74,10 @@ jobs:
         name: Test and Deploy Storage
         run: npx firebase deploy --only storage
 
+      - name: Set firebase api key
+        run: |
+          sed 's/FIREBASE_API_KEY/${{ secrets.FIREBASE_API_KEY }}/' \
+            -i lib/config/firebase_options.dart
       - name: Set UI version
         run: |
           VERSION=`grep 'version:' pubspec.yaml | sed 's/.*\s//'` && \

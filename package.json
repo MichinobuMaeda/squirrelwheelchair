@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "echo NODE_ENV=test > functions/.env && npx firebase emulators:exec --import test/firebase-emulators --ui 'npx firebase firestore:delete service/test --force && fvm flutter run'"
   },
   "repository": {
     "type": "git",
