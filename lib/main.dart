@@ -1,16 +1,30 @@
-// import 'package:flutter/foundation.dart';
-// import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
-// import 'package:google_fonts/google_fonts.dart';
 import 'config/app_info.dart';
+import 'config/firebase_options.dart';
+import 'generated/l10n.dart';
 
-void main() {
-  // GoogleFonts.config.allowRuntimeFetching = false;
-  // LicenseRegistry.addLicense(() async* {
-  //   final license = await rootBundle.loadString('google_fonts/OFL.txt');
-  //   yield LicenseEntryWithLineBreaks(['google_fonts'], license);
-  // });
-
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  if (version == 'for test') {
+    await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+    FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+    await FirebaseStorage.instance.useStorageEmulator('localhost', 9199);
+    FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
+  } else {
+    await FirebaseAppCheck.instance.activate(
+      webRecaptchaSiteKey: webRecaptchaSiteKey,
+    );
+  }
   runApp(const MyApp());
 }
 
@@ -20,14 +34,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    const seedColor = Colors.green;
+    const seedColor = Colors.blueGrey;
     final theme = ThemeData(
       colorScheme: ColorScheme.fromSeed(
         seedColor: seedColor,
       ),
-      // textTheme: GoogleFonts.sawarabiGothicTextTheme(
-      //   Theme.of(context).textTheme,
-      // ),
       useMaterial3: true,
     );
     final darkTheme = theme.copyWith(
@@ -37,27 +48,24 @@ class MyApp extends StatelessWidget {
       ),
     );
     return MaterialApp(
-      title: '日本語の漢字 道路',
+      title: appName,
       theme: theme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.system,
-      home: const MyHomePage(title: '日本国民は、正当に選挙された国会における代表者を通じて行動し'),
+      localizationsDelegates: const [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: S.delegate.supportedLocales,
+      home: const MyHomePage(title: appName),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -65,72 +73,160 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  bool _pinned = true;
+  bool _snap = false;
+  bool _floating = false;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
+// [SliverAppBar]s are typically used in [CustomScrollView.slivers], which in
+// turn can be placed in a [Scaffold.body].
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    final String privacyPolicy = S.of(context).privacyPolicy;
+    final List<String> lines = """日本国民は、
+正当に選挙された国会における代表者を通じて行動し、
+われらとわれらの子孫のために、
+諸国民との協和による成果と、
+わが国全土にわたつて自由のもたらす恵沢を確保し、
+政府の行為によつて再び戦争の惨禍が起ることのないやうにすることを決意し、
+ここに主権が国民に存することを宣言し、
+この憲法を確定する。
+そもそも国政は、国民の厳粛な信託によるものであつて、
+その権威は国民に由来し、
+その権力は国民の代表者がこれを行使し、
+その福利は国民がこれを享受する。
+これは人類普遍の原理であり、
+この憲法は、かかる原理に基くものである。
+われらは、
+これに反する一切の憲法、法令及び詔勅を排除する。
+$privacyPolicy"""
+        .split("\n");
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            pinned: _pinned,
+            snap: _snap,
+            floating: _floating,
+            expandedHeight: 160.0,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(
+                'SliverAppBar',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+              ),
+              background: const FlutterLogo(),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              color: Theme.of(context).colorScheme.background,
+              height: 20,
+              child: Center(
+                child: Text(
+                  'Scroll to see the SliverAppBar in effect.',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return Container(
+                  color: index.isOdd
+                      ? Theme.of(context).colorScheme.background
+                      : Theme.of(context).colorScheme.surfaceVariant,
+                  height: 64.0,
+                  child: Center(
+                    child: Text(
+                      lines[index],
+                      // textScaleFactor: 5,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
+                    ),
+                  ),
+                );
+              },
+              childCount: lines.length,
+            ),
+          ),
+        ],
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              version,
-              // 'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+      bottomNavigationBar: BottomAppBar(
+        // height: 128,
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: OverflowBar(
+            overflowAlignment: OverflowBarAlignment.center,
+            children: <Widget>[
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    'pinned',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                  ),
+                  Switch(
+                    onChanged: (bool val) {
+                      setState(() {
+                        _pinned = val;
+                      });
+                    },
+                    value: _pinned,
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    'snap',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                  ),
+                  Switch(
+                    onChanged: (bool val) {
+                      setState(() {
+                        _snap = val;
+                        // Snapping only applies when the app bar is floating.
+                        _floating = _floating || _snap;
+                      });
+                    },
+                    value: _snap,
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    'floating',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                  ),
+                  Switch(
+                    onChanged: (bool val) {
+                      setState(() {
+                        _floating = val;
+                        _snap = _snap && _floating;
+                      });
+                    },
+                    value: _floating,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
