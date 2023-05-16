@@ -5,13 +5,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'config/app_info.dart';
+import 'config/theme.dart';
 import 'config/firebase_options.dart';
 import 'generated/l10n.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+Future<void> initializeFirebase() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -25,6 +27,15 @@ Future<void> main() async {
       webRecaptchaSiteKey: webRecaptchaSiteKey,
     );
   }
+}
+
+void main() {
+  LicenseRegistry.addLicense(() async* {
+    final license = await rootBundle.loadString('fonts/OFL.txt');
+    yield LicenseEntryWithLineBreaks(['Noto Sans JP'], license);
+  });
+  WidgetsFlutterBinding.ensureInitialized();
+  initializeFirebase();
   runApp(const MyApp());
 }
 
@@ -34,11 +45,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    const seedColor = Colors.blueGrey;
     final theme = ThemeData(
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: seedColor,
-      ),
+      colorScheme: ColorScheme.fromSeed(seedColor: seedColor),
+      fontFamily: fontFamily,
+      textTheme: textTheme,
       useMaterial3: true,
     );
     final darkTheme = theme.copyWith(
@@ -73,9 +83,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool _pinned = true;
-  bool _snap = false;
-  bool _floating = false;
+  // bool _pinned = true;
+  // bool _snap = false;
+  // bool _floating = false;
 
 // [SliverAppBar]s are typically used in [CustomScrollView.slivers], which in
 // turn can be placed in a [Scaffold.body].
@@ -104,24 +114,59 @@ $privacyPolicy"""
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            pinned: _pinned,
-            snap: _snap,
-            floating: _floating,
-            expandedHeight: 160.0,
+            pinned: false,
+            snap: false,
+            floating: true,
+            expandedHeight: 120.0,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
-                'SliverAppBar',
+                appName,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),
               ),
-              background: const FlutterLogo(),
+              centerTitle: true,
+              background: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Menu 1',
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer,
+                          ),
+                        ),
+                        Text(
+                          'Menu 2',
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer,
+                          ),
+                        ),
+                        Text(
+                          'Menu 3',
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
           SliverToBoxAdapter(
             child: Container(
               color: Theme.of(context).colorScheme.background,
-              height: 20,
+              height: 24,
               child: Center(
                 child: Text(
                   'Scroll to see the SliverAppBar in effect.',
@@ -155,77 +200,6 @@ $privacyPolicy"""
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: BottomAppBar(
-        // height: 128,
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: OverflowBar(
-            overflowAlignment: OverflowBarAlignment.center,
-            children: <Widget>[
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(
-                    'pinned',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-                  ),
-                  Switch(
-                    onChanged: (bool val) {
-                      setState(() {
-                        _pinned = val;
-                      });
-                    },
-                    value: _pinned,
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(
-                    'snap',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-                  ),
-                  Switch(
-                    onChanged: (bool val) {
-                      setState(() {
-                        _snap = val;
-                        // Snapping only applies when the app bar is floating.
-                        _floating = _floating || _snap;
-                      });
-                    },
-                    value: _snap,
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(
-                    'floating',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-                  ),
-                  Switch(
-                    onChanged: (bool val) {
-                      setState(() {
-                        _floating = val;
-                        _snap = _snap && _floating;
-                      });
-                    },
-                    value: _floating,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
