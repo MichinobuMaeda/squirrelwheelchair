@@ -64,7 +64,7 @@ jobs:
       - name: Set UI version
         run: |
           VERSION=`grep 'version:' pubspec.yaml | sed 's/.*\s//'` && \
-            sed "s/for\ test/$VERSION/" -i lib/config/app_info.dart  && \
+            sed "s/for\ test/$VERSION/" -i lib/version.dart  && \
             echo "{\"version\":\"$VERSION\"}" > web/version.json && \
             echo $VERSION
       - uses: kuhnroyal/flutter-fvm-config-action@v1
