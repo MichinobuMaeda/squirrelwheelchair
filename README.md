@@ -6,6 +6,8 @@
 - nvm
 - Java JDK >= 11 for Firebase Local Emulator Suite
 
+[![codecov](https://codecov.io/gh/MichinobuMaeda/squirrelwheelchair/branch/main/graph/badge.svg?token=bDlKS8yUqs)](https://codecov.io/gh/MichinobuMaeda/squirrelwheelchair)
+
 ## Getting Started
 
 ```bash
