@@ -75,6 +75,7 @@ jobs:
           cache: true
           cache-key: ${{ runner.os }}-${{ hashFiles('package-lock.json ') }}
       - run: flutter pub get
+      - run: flutter test --coverage
       - run: flutter build web
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -84,3 +85,8 @@ jobs:
           projectId: squirrelwheelchair
       - name: Trigger system update job
         run: npx firebase firestore:delete service/upgrade --force
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info ,./functions/coverage/lcov.info

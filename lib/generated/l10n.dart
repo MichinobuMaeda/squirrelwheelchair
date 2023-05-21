@@ -50,11 +50,61 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Home`
+  String get home {
+    return Intl.message(
+      'Home',
+      name: 'home',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `About this app`
+  String get aboutThisApp {
+    return Intl.message(
+      'About this app',
+      name: 'aboutThisApp',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Privacy Policy`
   String get privacyPolicy {
     return Intl.message(
       'Privacy Policy',
       name: 'privacyPolicy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Licenses`
+  String get licenses {
+    return Intl.message(
+      'Licenses',
+      name: 'licenses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading ...`
+  String get defaultLoadingMessage {
+    return Intl.message(
+      'Loading ...',
+      name: 'defaultLoadingMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error`
+  String get defaultErrorMessage {
+    return Intl.message(
+      'Error',
+      name: 'defaultErrorMessage',
       desc: '',
       args: [],
     );
