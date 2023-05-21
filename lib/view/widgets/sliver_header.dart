@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../generated/l10n.dart';
 
+const double iconButtonSize = 40.0;
+
 class SliverHeader extends StatelessWidget {
   final String appName;
   const SliverHeader(this.appName, {super.key});
@@ -21,9 +23,9 @@ class SliverHeader extends StatelessWidget {
             ),
           ),
           centerTitle: true,
-          titlePadding: const EdgeInsets.all(8),
+          titlePadding: const EdgeInsets.all(12),
           background: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
                 Row(
@@ -31,30 +33,39 @@ class SliverHeader extends StatelessWidget {
                   children: [
                     IconButton(
                       color: Theme.of(context).colorScheme.primary,
-                      icon: const Icon(Icons.home),
+                      icon: const Icon(
+                        Icons.home,
+                        size: iconButtonSize,
+                      ),
                       tooltip: S.of(context).home,
                       onPressed: GoRouter.of(context).location == '/'
                           ? null
                           : () => context.go('/'),
                     ),
-                    const SizedBox(width: 16),
                     IconButton(
                       color: Theme.of(context).colorScheme.primary,
-                      icon: const Icon(Icons.account_circle),
+                      icon: const Icon(
+                        Icons.account_circle,
+                        size: iconButtonSize,
+                      ),
                       tooltip: 'Account',
-                      onPressed: () {},
+                      onPressed: null,
                     ),
-                    const SizedBox(width: 16),
                     IconButton(
                       color: Theme.of(context).colorScheme.primary,
-                      icon: const Icon(Icons.settings),
+                      icon: const Icon(
+                        Icons.settings,
+                        size: iconButtonSize,
+                      ),
                       tooltip: 'Settings',
-                      onPressed: () {},
+                      onPressed: null,
                     ),
-                    const SizedBox(width: 16),
                     IconButton(
                       color: Theme.of(context).colorScheme.primary,
-                      icon: const Icon(Icons.info),
+                      icon: const Icon(
+                        Icons.info,
+                        size: iconButtonSize,
+                      ),
                       tooltip: S.of(context).aboutThisApp,
                       onPressed: GoRouter.of(context).location == '/about'
                           ? null
