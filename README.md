@@ -201,3 +201,11 @@ After deployment of Functions
                         - Field: displayName
                             - Type: string
                             - Value: admin's display name
+
+GitHub Repository
+
+- Settings
+    - Actions
+        - General
+            - Workflow permissions
+                - [o] Read and write permission

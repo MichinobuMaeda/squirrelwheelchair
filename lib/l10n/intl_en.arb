@@ -1,1 +1,8 @@
-{}
+{
+    "home": "Home",
+    "aboutThisApp": "About this app",
+    "privacyPolicy": "Privacy Policy",
+    "licenses": "Licenses",
+    "defaultLoadingMessage": "Loading ...",
+    "defaultErrorMessage": "Error"
+}
