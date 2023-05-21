@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../config/theme.dart';
-import '../generated/l10n.dart';
+import '../../config/theme.dart';
+import '../../generated/l10n.dart';
 
 class ErrorMessage extends StatelessWidget {
   final String? message;

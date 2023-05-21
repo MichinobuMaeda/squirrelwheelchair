@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../generated/l10n.dart';
+import '../../generated/l10n.dart';
 import '../slivers/main_app_bar.dart';
 import '../slivers/license_list.dart';
 import '../slivers/footer.dart';

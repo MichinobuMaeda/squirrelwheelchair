@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:squirrelwheelchair/config/app_info.dart';
 
-import '../test_app.dart';
-import 'package:squirrelwheelchair/slivers/footer.dart';
+import '../../test_app.dart';
+import 'package:squirrelwheelchair/view/slivers/footer.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

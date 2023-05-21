@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../config/theme.dart';
+import '../../config/theme.dart';
 import 'loading_message.dart';
 import 'error_message.dart';
 

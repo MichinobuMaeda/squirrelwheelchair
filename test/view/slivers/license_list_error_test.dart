@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../test_app.dart';
-import 'package:squirrelwheelchair/slivers/license_list.dart';
+import '../../test_app.dart';
+import 'package:squirrelwheelchair/view/slivers/license_list.dart';
 
 void main() {
   LicenseRegistry.addLicense(() async* {

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import '../test_app.dart';
-import 'package:squirrelwheelchair/screens/about_screen.dart';
+import '../../test_app.dart';
+import 'package:squirrelwheelchair/view/screens/about_screen.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

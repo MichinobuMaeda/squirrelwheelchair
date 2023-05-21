@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import '../test_app.dart';
-import 'package:squirrelwheelchair/slivers/markdown_section.dart';
+import '../../test_app.dart';
+import 'package:squirrelwheelchair/view/slivers/markdown_section.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

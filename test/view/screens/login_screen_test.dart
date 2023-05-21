@@ -1,14 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import '../test_app.dart';
-import 'package:squirrelwheelchair/screens/home_screen.dart';
+import '../../test_app.dart';
+import 'package:squirrelwheelchair/view/screens/login_screen.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('HomeScreen', (WidgetTester tester) async {
+  testWidgets('LoginScreen', (WidgetTester tester) async {
     await tester.pumpWidget(testHookBuilder(testRouter(
-      const HomeScreen(),
+      const LoginScreen(),
     )));
 
     // TODO:

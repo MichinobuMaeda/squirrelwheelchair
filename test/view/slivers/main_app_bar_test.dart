@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../test_app.dart';
+import '../../test_app.dart';
 import 'package:squirrelwheelchair/router.dart';
 import 'package:squirrelwheelchair/config/app_info.dart';
 

@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import '../config/theme.dart';
+import '../../config/theme.dart';
 import 'markdown_section.dart';
 import 'loading_message.dart';
 

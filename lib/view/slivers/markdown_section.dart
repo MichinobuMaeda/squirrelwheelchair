@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-import '../config/theme.dart';
+import '../../config/theme.dart';
 
 class MarkdownSection extends StatelessWidget {
   final String data;

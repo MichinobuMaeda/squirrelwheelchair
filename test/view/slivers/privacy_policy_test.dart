@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import '../test_app.dart';
-import 'package:squirrelwheelchair/slivers/privacy_policy.dart';
+import '../../test_app.dart';
+import 'package:squirrelwheelchair/view/slivers/privacy_policy.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

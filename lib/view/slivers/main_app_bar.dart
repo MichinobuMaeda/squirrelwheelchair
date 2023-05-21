@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../config/app_info.dart';
-import '../generated/l10n.dart';
+import '../../config/app_info.dart';
+import '../../generated/l10n.dart';
 
 class MainAppBar extends StatelessWidget {
   const MainAppBar({super.key});
