@@ -60,11 +60,11 @@ jobs:
       - name: Set firebase api key
         run: |
           sed 's/FIREBASE_API_KEY/${{ secrets.FIREBASE_API_KEY }}/' \
-            -i lib/config/firebase_options.dart
+            -i lib/env.dart
       - name: Set UI version
         run: |
           VERSION=`grep 'version:' pubspec.yaml | sed 's/.*\s//'` && \
-            sed "s/for\ test/$VERSION/" -i lib/config/app_info.dart  && \
+            sed "s/for\ test/$VERSION/" -i lib/env.dart  && \
             echo "{\"version\":\"$VERSION\"}" > web/version.json && \
             echo $VERSION
       - uses: kuhnroyal/flutter-fvm-config-action@v1
@@ -75,8 +75,9 @@ jobs:
           cache: true
           cache-key: ${{ runner.os }}-${{ hashFiles('package-lock.json ') }}
       - run: flutter pub get
-      - run: flutter test --coverage
+      - run: flutter gen-l10n
       - run: flutter build web
+      - run: flutter test --coverage
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
