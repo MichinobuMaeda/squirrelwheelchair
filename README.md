@@ -1,23 +1,35 @@
 # squirrelwheelchair
 
+[![codecov](https://codecov.io/gh/MichinobuMaeda/squirrelwheelchair/branch/main/graph/badge.svg?token=bDlKS8yUqs)](https://codecov.io/gh/MichinobuMaeda/squirrelwheelchair)
+
 ## Prerequisites
 
 - fvm
 - nvm
 - Java JDK >= 11 for Firebase Local Emulator Suite
 
-[![codecov](https://codecov.io/gh/MichinobuMaeda/squirrelwheelchair/branch/main/graph/badge.svg?token=bDlKS8yUqs)](https://codecov.io/gh/MichinobuMaeda/squirrelwheelchair)
-
 ## Getting Started
 
 ```bash
 git clone git@github.com:MichinobuMaeda/squirrelwheelchair.git
+fvm use
 fvm flutter pub get
+fvm flutter gen-l10n
+fvm flutter pub run build_runner build --delete-conflicting-outputs
 nvm use
 npm install
 npm install --prefix functions
+```
+
+## Development
+
+```bash
 npm test
 npm start
+r
+q
+
+fvm flutter pub run build_runner watch
 ```
 
 Firebase Emulators UI: <http://localhost:4040/>

@@ -1,0 +1,11 @@
+{
+    "home": "ホーム",
+    "aboutThisApp": "このアプリについて",
+    "privacyPolicy": "プライバシーポリシー",
+    "licenses": "ライセンス",
+    "defaultLoadingMessage": "データ受信中 ...",
+    "defaultErrorMessage": "エラー",
+    "updateThisApp": "アプリを更新する",
+    "copyright": "© 2023 Michinobu Maeda",
+    "appName": "Squirrel Wheelchair"
+}

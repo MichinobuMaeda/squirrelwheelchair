@@ -1,9 +1,11 @@
 name: squirrelwheelchair
-description: A new Flutter project.
+description: Squirrel Wheelchair
 publish_to: 'none'
 version: 0.0.3+2
 environment:
   sdk: '>=3.0.0 <4.0.0'
+platforms:
+  web:
 dependencies:
   flutter:
     sdk: flutter
@@ -21,18 +23,29 @@ dependencies:
   hooks_riverpod: ^2.3.6
   flutter_markdown: ^0.6.14
   url_launcher: ^6.1.11
+  riverpod_annotation: ^2.1.1
+  json_annotation: ^4.8.1
+  universal_html: ^2.2.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
   flutter_native_splash: ^2.3.0
-  intl_utils: ^2.8.2
   mockito: ^5.4.0
+  custom_lint: ^0.4.0
+  riverpod_lint: ^1.3.2
+  build_runner: ^2.4.4
+  riverpod_generator: ^2.2.3
+  fake_cloud_firestore: ^2.4.1+1
+  firebase_auth_mocks: ^0.11.0
+  firebase_storage_mocks: ^0.6.1
+  json_serializable: ^6.7.0
 flutter:
   uses-material-design: true
+  generate: true
   fonts:
     - family: NotoSans
-      fonts:
+      fonts: 
         - asset: assets/fonts/NotoSansJP-Regular.ttf 
   assets:
     - assets/images/logo-192.png
@@ -40,8 +53,6 @@ flutter:
     - assets/privacy_policy-en.md
     - assets/privacy_policy-ja.md
     - LICENSE
-flutter_intl:
-  enabled: true
 flutter_native_splash:
   image: "assets/images/logo-invert.png"
   image_dark: "assets/images/logo.png"

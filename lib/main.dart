@@ -1,38 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'data/firebase.dart';
-import 'generated/l10n.dart';
-import 'view/assets.dart';
-import 'view/screen_base.dart';
-import 'view/router.dart';
-import 'view/style.dart';
+import 'repositories/firebase_util.dart';
+import 'view_models/update_app_provider.dart';
+import 'views/router.dart';
+import 'views/style.dart';
+import 'assets.dart';
+import 'env.dart';
+import 'platforms.dart';
+import 'logger.dart';
 
-void main() {
-  addLicenses(licenseEntries);
+void main() async {
+  bool test = version == 'for test';
+
+  addLicenseEntries(licenseAssets);
   WidgetsFlutterBinding.ensureInitialized();
-  initializeFirebase();
-  runApp(const ProviderScope(child: MyApp()));
+  await initializeFirebase(test: test);
+  final intl = await AppLocalizations.delegate.load(const Locale('en'));
+
+  runApp(
+    ProviderScope(
+      observers: [
+        if (test) ProviderLogger(),
+      ],
+      overrides: [
+        updateAppProvider.overrideWith((ref) => updateWebApp),
+      ],
+      child: MyApp(title: intl.appName),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String title;
+  const MyApp({super.key, required this.title});
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) => MaterialApp.router(
-        title: ScreenBase.appName,
-        theme: theme,
-        darkTheme: darkTheme,
-        themeMode: ThemeMode.system,
-        localizationsDelegates: const [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: S.delegate.supportedLocales,
-        routerConfig: router,
-      );
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      title: title,
+      theme: theme,
+      darkTheme: darkTheme,
+      themeMode: themeMode,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      routerConfig: router,
+    );
+  }
 }
