@@ -5,6 +5,7 @@ import 'package:squirrelwheelchair/repositories/firebase_provider.dart';
 import 'package:squirrelwheelchair/models/app_state.dart';
 import 'package:squirrelwheelchair/view_models/app_state_provider.dart';
 import 'package:squirrelwheelchair/views/router.dart';
+import 'package:squirrelwheelchair/env.dart';
 
 import '../../test_app.dart';
 
@@ -30,7 +31,7 @@ void main() {
     await tester.pump();
 
     expect(find.text(intl.appName), findsOneWidget);
-    expect(find.text('Version: for test'), findsNothing);
+    expect(find.text('Version: $version'), findsNothing);
 
     expect(find.byIcon(Icons.arrow_back), findsNothing);
     expect(find.byIcon(Icons.info), findsOneWidget);
@@ -40,40 +41,40 @@ void main() {
 
     expect(find.byIcon(Icons.arrow_back), findsOneWidget);
     expect(find.text(intl.appName), findsOneWidget);
-    expect(find.text('Version: for test'), findsOneWidget);
+    expect(find.text('Version: $version'), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.info));
     await tester.pump();
 
     expect(find.text(intl.appName), findsOneWidget);
-    expect(find.text('Version: for test'), findsOneWidget);
+    expect(find.text('Version: $version'), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.home));
     await tester.pump();
 
     expect(find.byIcon(Icons.arrow_back), findsNothing);
     expect(find.text(intl.appName), findsOneWidget);
-    expect(find.text('Version: for test'), findsNothing);
+    expect(find.text('Version: $version'), findsNothing);
 
     await tester.tap(find.byIcon(Icons.home));
     await tester.pump();
 
     expect(find.byIcon(Icons.arrow_back), findsNothing);
     expect(find.text(intl.appName), findsOneWidget);
-    expect(find.text('Version: for test'), findsNothing);
+    expect(find.text('Version: $version'), findsNothing);
 
     await tester.tap(find.byIcon(Icons.info));
     await tester.pump();
 
     expect(find.byIcon(Icons.arrow_back), findsOneWidget);
     expect(find.text(intl.appName), findsOneWidget);
-    expect(find.text('Version: for test'), findsOneWidget);
+    expect(find.text('Version: $version'), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.arrow_back));
     await tester.pump();
 
     expect(find.byIcon(Icons.arrow_back), findsNothing);
     expect(find.text(intl.appName), findsOneWidget);
-    expect(find.text('Version: for test'), findsNothing);
+    expect(find.text('Version: $version'), findsNothing);
   });
 }

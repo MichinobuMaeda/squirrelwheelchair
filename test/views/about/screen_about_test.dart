@@ -1,8 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../test_app.dart';
-
+import 'package:squirrelwheelchair/env.dart';
 import 'package:squirrelwheelchair/views/about/screen_about.dart';
+
+import '../../test_app.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +14,6 @@ void main() {
       [],
     ));
 
-    expect(find.textContaining('Version: for test'), findsOneWidget);
+    expect(find.text('Version: $version'), findsOneWidget);
   });
 }
