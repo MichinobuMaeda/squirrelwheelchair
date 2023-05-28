@@ -30,8 +30,8 @@ jobs:
           cache: true
           cache-key: ${{ runner.os }}-${{ hashFiles('package-lock.json ') }}
       - run: flutter pub get
-      - run: flutter test
       - run: flutter build web
+      - run: flutter test
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
